@@ -167,4 +167,4 @@ onAuthStateChanged(auth, (u) => { document.getElementById("who").textContent = u
 getRedirectResult(auth)
   .then((r) => { if (r) log(`redirect sign-in ok: ${r.user.email}`); })
   .catch((e) => log(`redirect sign-in FAILED: ${describe(e)}`, true));
-log(`page loaded on ${device}; project=${config.projectId}; online=${navigator.onLine}`);
+log(`page loaded (probe v3) on ${device}; project=${config.projectId}; online=${navigator.onLine}`);

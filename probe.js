@@ -73,11 +73,13 @@ const actions = {
 
   async burnReads() {
     const t0 = Date.now();
+    // Firestore caps limit() at 10,000; a random base per run keeps every pass a new query.
+    const base = 1001 + Math.floor(Math.random() * 8900);
     for (let pass = 1; pass <= 80; pass++) {
       try {
         // A distinct query each pass: re-running the same query resumes from the cache and
         // the server bills only changed docs, which is why the first burn barely moved the quota.
-        const q = query(collection(db, "burn"), where("i", ">=", 0), limit(100000 + Date.now() % 100000 + pass));
+        const q = query(collection(db, "burn"), where("i", ">=", 0), limit(base + pass));
         const snap = await withTimeout(getDocsFromServer(q));
         tally(snap.size);
         if (pass % 5 === 0) log(`burn pass ${pass}: ${snap.size} docs`);

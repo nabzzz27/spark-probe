@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spark probe</title>
+<style>
+  body { font: 15px/1.4 system-ui, sans-serif; margin: 12px; max-width: 760px; }
+  fieldset { margin: 0 0 10px; border: 1px solid #ccc; }
+  button { font-size: 15px; margin: 3px 2px; padding: 6px 10px; }
+  #who { font-weight: bold; }
+  #log { white-space: pre-wrap; font: 12px/1.35 ui-monospace, monospace; background: #f4f4f4; padding: 8px; max-height: 55vh; overflow: auto; }
+  .err { color: #b00; }
+</style>
+</head>
+<body>
+<h1>Spark probe</h1>
+<p>Signed in: <span id="who">…</span> · Client read tally today: <span id="tally">0</span></p>
+
+<fieldset><legend>Sign-in</legend>
+  <button data-act="signInPopup">Sign in (popup)</button>
+  <button data-act="signInRedirect">Sign in (redirect)</button>
+  <button data-act="signOutNow">Sign out</button>
+</fieldset>
+
+<fieldset><legend>Quota</legend>
+  <button data-act="seed">Seed 1,000 docs</button>
+  <button data-act="burnReads">Burn reads until failure</button>
+  <button data-act="probe">Probe read / write / delete</button>
+  <button data-act="listen">Start listener</button>
+</fieldset>
+
+<fieldset><legend>Rules get()</legend>
+  <button data-act="rulesGet">Run 200 writes through a get() rule</button>
+</fieldset>
+
+<fieldset><legend>Offline / cache (iPhone)</legend>
+  <button data-act="readCache">Read from cache only</button>
+  <button data-act="writeOffline">Write 5 docs now (works offline)</button>
+  <button data-act="checkServer">Check offline docs on server</button>
+  <button data-act="storageInfo">Storage info</button>
+</fieldset>
+
+<fieldset><legend>Log</legend>
+  <button data-act="copyLog">Copy log</button>
+  <button data-act="clearLog">Clear log</button>
+</fieldset>
+
+<div id="log"></div>
+<script type="module" src="probe.js"></script>
+</body>
+</html>

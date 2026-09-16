@@ -7,7 +7,7 @@ import {
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
   collection, doc, setDoc, deleteDoc, writeBatch, onSnapshot,
-  getDocsFromServer, getDocsFromCache, serverTimestamp,
+  getDocsFromServer, getDocsFromCache, serverTimestamp, query, where, limit,
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 import config from "./firebase-config.js";
 
@@ -75,7 +75,10 @@ const actions = {
     const t0 = Date.now();
     for (let pass = 1; pass <= 80; pass++) {
       try {
-        const snap = await withTimeout(getDocsFromServer(collection(db, "burn")));
+        // A distinct query each pass: re-running the same query resumes from the cache and
+        // the server bills only changed docs, which is why the first burn barely moved the quota.
+        const q = query(collection(db, "burn"), where("i", ">=", 0), limit(100000 + Date.now() % 100000 + pass));
+        const snap = await withTimeout(getDocsFromServer(q));
         tally(snap.size);
         if (pass % 5 === 0) log(`burn pass ${pass}: ${snap.size} docs`);
       } catch (e) {
